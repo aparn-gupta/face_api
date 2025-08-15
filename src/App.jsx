@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SignIn from './SignIn'
@@ -10,6 +10,7 @@ import NewLogIn from './NewLogIn'
 import Dashboard from './Dashboard'
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import * as faceapi from "face-api.js"
 
 
 
@@ -25,6 +26,28 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 
 const App = () => {
+
+
+  useEffect (() => {
+    const loadModels = async () => {
+      try {
+          await Promise.all([
+              faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+              faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+              faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+
+          ])
+
+          console.log("models loaded")
+
+      } catch (err) {
+          console.log(err)
+      }
+  }
+
+  loadModels()
+
+  }, [])
 
   const theme = createTheme({
     palette: {

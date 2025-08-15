@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import * as faceapi from "face-api.js"
 import { useNavigate } from 'react-router-dom'
-import Alert from '@mui/material/Alert';
+import {Input, Alert, InputLabel, Button, FormControl} from '@mui/material';
+
 
 
 
@@ -63,23 +64,7 @@ const NewLogIn = () => {
 
         startWebCam()
 
-        const loadModels = async () => {
-            try {
-                await Promise.all([
-                    faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-                    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-                    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-
-                ])
-
-                console.log("models loaded")
-
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        loadModels()
+     
 
 
         const findDescriptors = async () => {
@@ -199,7 +184,8 @@ const NewLogIn = () => {
                     // setDescritorArr(detections[0].descriptor)
                     // setFormData(JSON.stringify(descriptorArrayResult))
 
-                    setFormData(descriptorArrayResult)
+                    // setFormData(descriptorArrayResult)
+                    postfaceData(descriptorArrayResult)
 
                     // console.log("apple1")
 
@@ -218,15 +204,56 @@ const NewLogIn = () => {
         }
 
 
-        setTimeout(() => {
+        const postfaceData = async (desArr) => {
+            try {
+                const response = await fetch("http://localhost:3608/loginface", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    // body: JSON.stringify({descriptorArray: formdata})
+                    body: JSON.stringify({ userFace: desArr })
+    
+                })
+    
+                const result = await response.json()
+
+                // setMatchResult(result)
+                setTimeout(() => {
+                    // if (result.matchResult === true) navigate('/dashboard')
+    
+                }, 1500)
+    
+                // setRecognisedface(result.bestMatchFace, + "(" + result.indicator + ")") 
+    
+                console.log(result)
+    
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    
+    
+   
+
+
+     let timeout =    setTimeout(() => {
             setInterval(() => {
                 findDescriptors()
+                // postfaceData()
+
 
             }, 2000)
 
-            setLoginBtn(false)
 
         }, 3000)
+
+
+
+        return () => {
+            clearTimeout(timeout)
+
+        }
 
 
 
@@ -242,42 +269,7 @@ const NewLogIn = () => {
     }, [])
 
 
-    const postfaceData = async () => {
-        try {
-            const response = await fetch("http://localhost:3608/loginface", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                // body: JSON.stringify({descriptorArray: formdata})
-                body: JSON.stringify({ userFace: formdata, userId : currentUserId })
-
-            })
-
-            const result = await response.json()
-            setMatchResult(result.matchResult)
-            setTimeout(() => {
-                if (result.matchResult === true) navigate('/dashboard')
-
-            }, 1500)
-
-            // setRecognisedface(result.bestMatchFace, + "(" + result.indicator + ")") 
-
-            console.log(result)
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-
-
-    const handleSubmit = () => {
-        console.log(formdata)
-
-        postfaceData()
-
-    }
+ 
 
 
 
@@ -312,8 +304,12 @@ const NewLogIn = () => {
 
 
             <div className='flex justify-center mt-3'>
-            <input className=' mt-5 border-2 ' onChange={(e) => setCurrentUserId(e.target.value)} />
-            <button className='btn btn-secondary mt-5' disabled={loginBtn} onClick={handleSubmit}> Login   </button>
+               <FormControl >
+               <InputLabel htmlFor="login-id" >Enter Login Id </InputLabel>
+               <Input id="login-id" onChange={(e) => setCurrentUserId(e.target.value)} />
+               </FormControl>
+            {/* <input className=' mt-5 border-2 ' onChange={(e) => setCurrentUserId(e.target.value)} /> */}
+            {/* <Button  disabled={loginBtn} onClick={handleSubmit}> Login   </Button> */}
 
             </div>
 
