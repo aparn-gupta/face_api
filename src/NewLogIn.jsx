@@ -18,14 +18,10 @@ const NewLogIn = () => {
     const navigate = useNavigate()
 
 
-    const [formdata, setFormData] = useState([])
+  
 
-    const [loginBtn, setLoginBtn] = useState(true)
-
-    const [recognisedFace, setRecognisedface] = useState("")
-
-    const [currentUserId, setCurrentUserId] = useState("")
-    const [matchResult, setMatchResult] = useState()
+    // const [currentUserId, setCurrentUserId] = useState("")
+    // const [matchResult, setMatchResult] = useState()
     const [multipleFacesMessage, setMultiplefacesMessage] = useState("")
     const [detectionScoreMessage, setDetectionScoreMessage] = useState("")
 
@@ -227,6 +223,15 @@ const NewLogIn = () => {
                 // setRecognisedface(result.bestMatchFace, + "(" + result.indicator + ")") 
     
                 console.log(result)
+                sessionStorage.setItem("loggedUserData", JSON.stringify({userId: result.id, name: result.bestMatchFace, token: result.token}))
+                if (result.success) {
+                    navigate("/dashboard", {
+                        state: {
+                            username: result.bestMatchFace,
+                            id: result.id
+                        }
+                    })
+                }
     
             } catch (err) {
                 console.log(err)
@@ -304,10 +309,10 @@ const NewLogIn = () => {
 
 
             <div className='flex justify-center mt-3'>
-               <FormControl >
+               {/* <FormControl >
                <InputLabel htmlFor="login-id" >Enter Login Id </InputLabel>
                <Input id="login-id" onChange={(e) => setCurrentUserId(e.target.value)} />
-               </FormControl>
+               </FormControl> */}
             {/* <input className=' mt-5 border-2 ' onChange={(e) => setCurrentUserId(e.target.value)} /> */}
             {/* <Button  disabled={loginBtn} onClick={handleSubmit}> Login   </Button> */}
 
@@ -319,9 +324,9 @@ const NewLogIn = () => {
 
 
             {/* <h1 className='text-3xl text-green-500 mt-5'>{recognisedFace}</h1> */}
-            <div className='text-3xl text-center mt-5'>{matchResult === true && <h1 className='text-green-500'>Face Matched!</h1> }</div>
+            {/* <div className='text-3xl text-center mt-5'>{matchResult === true && <h1 className='text-green-500'>Face Matched!</h1> }</div> */}
 
-            <div className='text-3xl text-center mt-5'>{matchResult === false && <h1 className='text-red-500'>Face Did Not Match!</h1> }</div>
+            {/* <div className='text-3xl text-center mt-5'>{matchResult === false && <h1 className='text-red-500'>Face Did Not Match!</h1> }</div> */}
 
 
 
