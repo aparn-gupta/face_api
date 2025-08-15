@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import * as faceapi from "face-api.js"
 import { Link } from 'react-router-dom'
+// import FormControl from '@mui/material/FormControl'
+// import Button from '@mui/material/Button'
+import {FormControl, Input, InputLabel, FormHelperText, Button } from "@mui/material"
+
 
 const NewSignIn = () => {
 
@@ -11,11 +15,14 @@ const NewSignIn = () => {
     const [formdata, setFormData] = useState([])
     const [username, setUsername] = useState("")
 
-    const [signInBtn, setSignInBtn] = useState(true)
+    const [signInBtn, setSignInBtn] = useState(false)
 
     const [success, setSuccess] = useState(false)
 
     const [message, setMessage] = useState("")
+
+     const [multipleFacesMessage, setMultiplefacesMessage] = useState("")
+        const [detectionScoreMessage, setDetectionScoreMessage] = useState("")
 
 
 
@@ -73,18 +80,64 @@ const NewSignIn = () => {
                 if (webcamEl.current) {
                     const detections = await faceapi.detectAllFaces(webcamEl.current).withFaceLandmarks().withFaceDescriptors()
 
-                    const descriptorArrayResult = []
+                    // const descriptorArrayResult = []
 
-                    for (let x = 0; x < 128; x++) {
-                        descriptorArrayResult.push(detections[0].descriptor[x])
+                    // for (let x = 0; x < 128; x++) {
+                    //     descriptorArrayResult.push(detections[0].descriptor[x])
 
-                    }
+                    // }
 
-                    console.log(JSON.stringify(descriptorArrayResult))
+                    
+                                        if (detections.length > 1) {
+                                            setMultiplefacesMessage("Multiple Faces detected. Please insert only one face in the cam")
+                                            setSignInBtn(false)
+                                        } else if (detections.length === 0) {
+                                            setMultiplefacesMessage("No faces detected. Please insert face properly")
+                                            setSignInBtn(false)
+
+                    
+                                        } else {
+                                            if (detections.length === 1) {
+                                                setMultiplefacesMessage("")
+                                                setSignInBtn(true)
+
+                    
+                    
+                                            }
+                                        }
+                    
+                    
+                                        let faceWithBestDetection = detections[0]
+                    
+                                        for (let each of detections) {
+                                            if (each.detection.score > faceWithBestDetection) {
+                                                faceWithBestDetection = each
+                                            }
+                                        }
+                    
+                                        let detectionScore = faceWithBestDetection.detection.score
+                    
+                    
+                    
+                                        if (detectionScore < 0.8) {
+                                            setDetectionScoreMessage("Face not detected. Please insert your face properly")
+                                            setSignInBtn(false)
+
+                                        } else {
+                                            setDetectionScoreMessage("")
+                                            setSignInBtn(true)
+
+                                        }
+                    
+                    
+
+                    const descriptorArrayResult  = Array.from(detections[0].descriptor)
+
+                    console.log(descriptorArrayResult)
 
 
                     // setDescritorArr(detections[0].descriptor)
-                    setFormData(JSON.stringify(descriptorArrayResult))
+                    setFormData(descriptorArrayResult)
 
 
 
@@ -101,11 +154,10 @@ const NewSignIn = () => {
         }
 
 
-        setTimeout(() => {
+        setInterval(() => {
             findDescriptors()
-            setSignInBtn(false)
 
-        }, 3000)
+        }, 2000)
 
 
 
@@ -131,7 +183,6 @@ const NewSignIn = () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                // body: JSON.stringify({descriptorArray: formdata})
                 body: JSON.stringify({ empName: username, descriptorArray: formdata })
 
             })
@@ -175,23 +226,42 @@ const NewSignIn = () => {
 
 
     return (
-           <div className=''>
+<div>
 
 <h1 className='text-3xl'>Register</h1>
 <h2 className='mb-5'> Look in the camera and click Submit </h2>
+<div className='flex justify-center'>
 
-<video autoPlay width={600} height={500} ref={webcamEl} className='mb-5'>
+
+<div className=''>
+
+
+<div className=' w-80 h-80 rounded-full flex justify-center animated-circle-border ' >
+<div className='w-72 h-72 rounded-full my-auto'>
+<video autoPlay width={2000} height={2000} ref={webcamEl} className='w-72 h-72 rounded-full object-cover' >
 
 
 </video>
+</div>
+</div>
 
-<label className=''> Enter Username</label>
+<FormControl>
+  <InputLabel htmlFor="my-input">Enter Username</InputLabel>
+  <Input id="my-input" aria-describedby="my-helper-text"  onChange={(e) => setUsername(e.target.value)}  />
+  {/* <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText> */}
+</FormControl>
+
+
+{/* <label className=''> Enter Username</label>
 <br/>
 
 <input className='input mt-5 ' onChange={(e) => setUsername(e.target.value)} />
-<br/>
+<br/> */}
 
-<button className='btn btn-secondary mt-5' disabled={signInBtn} onClick={handleSubmit}> Submit Face Data   </button>
+<Button variant="contained" style={{display :  signInBtn ? "block" : "none" }} onClick={handleSubmit}> Submit Face Data   </Button>
+
+<Button variant="contained" color='success' sx={{marginX: "1rem"}} > Sign in using password   </Button>
+
 
 {
     success && <div>
@@ -207,10 +277,17 @@ const NewSignIn = () => {
 }
 
 
+<div className=' text-red-500text-center mt-5'> {multipleFacesMessage} </div>
+
+<div className=' text-red-500text-center mt-5'> {detectionScoreMessage} </div>
+</div>
 
 
 
 
+
+
+</div>
 </div>
     )
 }

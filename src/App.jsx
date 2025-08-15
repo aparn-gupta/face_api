@@ -9,6 +9,11 @@ import NewSignIn from './NewSignIn'
 import NewLogIn from './NewLogIn'
 import Dashboard from './Dashboard'
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+
+
+
 
 
 //tasks pending
@@ -20,8 +25,28 @@ import Dashboard from './Dashboard'
 
 
 const App = () => {
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        light: '#4dabf5',
+        main: '#2196f3',
+        dark: '#1769aa',
+        contrastText: '#fff',
+      },
+      secondary: {
+        // light: '#ff7961',
+        main: '#f73378',
+        // dark: '#ba000d',
+        // contrastText: 'white',
+      },
+    },
+  });
+
+
   return (
- <BrowserRouter >
+ <ThemeProvider theme={theme}>
+  <BrowserRouter >
 <div className='p-8'>
 <Routes>
  <Route path='/' element={ <Home />} />
@@ -41,6 +66,7 @@ const App = () => {
  </Routes>
 </div>
  </BrowserRouter>
+ </ThemeProvider>
   )
 }
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import * as faceapi from "face-api.js"
 import { useNavigate } from 'react-router-dom'
+import Alert from '@mui/material/Alert';
+
 
 
 
@@ -45,7 +47,12 @@ const NewLogIn = () => {
                     webcamEl.current.play()
 
 
+
+
                 }
+
+
+
 
             } catch (err) {
                 console.log(err)
@@ -103,7 +110,7 @@ const NewLogIn = () => {
                     if (detections.length > 1) {
                         setMultiplefacesMessage("Multiple Faces detected. Please insert only one face in the cam")
                     } else if (detections.length === 0) {
-                        setMultiplefacesMessage("No face detected. Please make sure your whole face shows. Please remove sunglasses, caps, masks etc")
+                        setMultiplefacesMessage("No faces detected. Please insert face properly")
 
                     } else {
                         if (detections.length === 1) {
@@ -127,12 +134,12 @@ const NewLogIn = () => {
 
 
                     if (detectionScore < 0.8) {
-                        setDetectionScoreMessage("Face not detected. Please make sure your whole face shows. Please remove sunglasses, caps, masks etc")
+                        setDetectionScoreMessage("Face not detected. Please insert your face properly")
                     } else {
                         setDetectionScoreMessage("")
                     }
 
-ß
+
 
                     // console.log(detections)
                     console.log(detectionScore)
@@ -159,14 +166,14 @@ const NewLogIn = () => {
                                 const options  = {
                                     label: "",
                                     lineWidth: 4,
-                                    boxColor: '#3f95c352'
+                                    boxColor: 'blue'
                                 }
 
                                 // console.log(faceWithBestDetection.detection.box)
 
-                                // const drawBox = new faceapi.draw.DrawBox(faceWithBestDetection.detection.box, options)
+                                const drawBox = new faceapi.draw.DrawBox(faceWithBestDetection.detection.box, options)
 
-                                // drawBox.draw(canvasRef.current)
+                                drawBox.draw(canvasRef.current)
 
 
 
@@ -174,19 +181,25 @@ const NewLogIn = () => {
 
                     // console.log(detections[0].descriptor)
                     // console.log(detections[0].descriptor[0])
-                    const descriptorArrayResult = []
+                    // const descriptorArrayResult = []
 
-                    for (let x = 0; x < 128; x++) {
-                        descriptorArrayResult.push(faceWithBestDetection.descriptor[x])
+                    // for (let x = 0; x < 128; x++) {
+                    //     descriptorArrayResult.push(faceWithBestDetection.descriptor[x])
 
-                    }
+                    // 
+
+                    const descriptorArrayResult  = Array.from(faceWithBestDetection.descriptor)
+
+                    console.log(descriptorArrayResult)
 
                     // console.log(JSON.stringify(descriptorArrayResult))
                     // console.log(detections[0].descriptor)
 
 
                     // setDescritorArr(detections[0].descriptor)
-                    setFormData(JSON.stringify(descriptorArrayResult))
+                    // setFormData(JSON.stringify(descriptorArrayResult))
+
+                    setFormData(descriptorArrayResult)
 
                     // console.log("apple1")
 
@@ -282,15 +295,14 @@ const NewLogIn = () => {
     return (
         <div>
 
+<Alert severity="success">This is a success Alert.</Alert>
+
+
             <h1 className='text-3xl'>Log In</h1>
             <h2 className='mb-5'> Look in the camera and click Log In </h2>
 
-         <div className="container" style={{position: "relative", width: "550px", height: "650px", display: "flex", justifyContent: "center"}}> 
-         <div className=' custom-line'  >
-
-
-</div>
-         <video autoPlay width={600} height={900} ref={webcamEl} playsInline style={{objectFit: "cover", width: "full", height: "full"}}>
+         <div className="comtainer" style={{position: "relative", display: "flex", justifyContent: "center" }}> 
+         <video autoPlay width={600} height={500} ref={webcamEl} playsInline>
 
 
 </video>
@@ -299,9 +311,11 @@ const NewLogIn = () => {
          </div>
 
 
-            <div className=' text-red-500 text-xl text-center mt-5'> {multipleFacesMessage} </div>
+            <div className='flex justify-center mt-3'>
+            <input className=' mt-5 border-2 ' onChange={(e) => setCurrentUserId(e.target.value)} />
+            <button className='btn btn-secondary mt-5' disabled={loginBtn} onClick={handleSubmit}> Login   </button>
 
-<div className=' text-red-500 text-xl text-center mt-5'> {detectionScoreMessage} </div>
+            </div>
 
 
 
@@ -314,28 +328,10 @@ const NewLogIn = () => {
             <div className='text-3xl text-center mt-5'>{matchResult === false && <h1 className='text-red-500'>Face Did Not Match!</h1> }</div>
 
 
-            <div className='flex  mt-3'>
-            <input className='input mt-5 ' onChange={(e) => setCurrentUserId(e.target.value)} />
 
-            <button className='btn btn-secondary mt-5' disabled={loginBtn} onClick={handleSubmit}> Login   </button>
+            <div className=' text-red-500text-center mt-5'> {multipleFacesMessage} </div>
 
-            </div>
-
-
-
-        {/* <div className='animation-container'>
-            hello
-            <div className=' custom-line'  >
-
-
-            </div>
-
-
-        </div> */}
-
-
-
-        
+            <div className=' text-red-500text-center mt-5'> {detectionScoreMessage} </div>
 
 
 
