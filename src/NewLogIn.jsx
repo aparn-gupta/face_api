@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import * as faceapi from "face-api.js"
 import { useNavigate } from 'react-router-dom'
-import {Input, Alert, InputLabel, Button, FormControl} from '@mui/material';
+import {Alert, Button, FormControl, TextField, Box } from '@mui/material';
+import {animate, motion} from "framer-motion"
+
+
 
 
 
@@ -17,6 +20,9 @@ const NewLogIn = () => {
 
     const navigate = useNavigate()
 
+    const serverAddress = import.meta.env.VITE_SERVER_ADDRESS
+
+
 
   
 
@@ -24,6 +30,12 @@ const NewLogIn = () => {
     // const [matchResult, setMatchResult] = useState()
     const [multipleFacesMessage, setMultiplefacesMessage] = useState("")
     const [detectionScoreMessage, setDetectionScoreMessage] = useState("")
+
+       const [isExpanded, setIsExpanded] = useState(false)
+    
+        const [manualUsername, setManualUsername] = useState("")
+    
+        const [password, setPassword] = useState("")
 
 
 
@@ -202,7 +214,7 @@ const NewLogIn = () => {
 
         const postfaceData = async (desArr) => {
             try {
-                const response = await fetch("http://localhost:3608/loginface", {
+                const response = await fetch(`${serverAddress}/loginface`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -251,7 +263,7 @@ const NewLogIn = () => {
             }, 2000)
 
 
-        }, 3000)
+        }, 5000000)
 
 
 
@@ -274,6 +286,43 @@ const NewLogIn = () => {
     }, [])
 
 
+
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault()
+        console.log({manualUsername, password})
+
+        try {
+            const response =  await fetch(`${serverAddress}/loginwithpassword`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({manualUsername, password})
+
+            })
+
+            const result = await response.json()
+
+            if (result.success) {
+                sessionStorage.setItem("token", result.token)
+                sessionStorage.setItem("currentUserId", result.userId)
+                sessionStorage.setItem("currentUserName", result.userName)
+
+                navigate("/dashboard")
+
+            }
+
+            console.log(result)
+
+        } catch (err) {
+            console.log(err)
+
+        }
+
+
+    }
+
+
  
 
 
@@ -290,9 +339,10 @@ const NewLogIn = () => {
 
 
     return (
-        <div>
+        <div className='flex w-screen'>
 
-<Alert severity="success">This is a success Alert.</Alert>
+            <div>
+                {/* <Alert severity="success">This is a success Alert.</Alert> */}
 
 
             <h1 className='text-3xl'>Log In</h1>
@@ -333,6 +383,42 @@ const NewLogIn = () => {
             <div className=' text-red-500text-center mt-5'> {multipleFacesMessage} </div>
 
             <div className=' text-red-500text-center mt-5'> {detectionScoreMessage} </div>
+
+
+            <Button variant="contained" color='success' sx={{marginX: "1rem"}} onClick={() => {setIsExpanded(prev => !prev)}} > Log In in using password   </Button>
+
+
+            </div>
+
+
+            <motion.div className='shadow-2xl rounded-md h-[800px] absolute right-0 top-0'  variants= {{thin : {width : '0.5rem'}, broad: {width: '50rem'}}}  initial='thin' animate={isExpanded ? 'broad' : 'thin'} transition={{type: 'tween', duration: 0.4, stiffness: 100}}>
+
+<FormControl>
+
+
+<Box margin={10}>
+<div>
+<TextField id="username-manual" label="Username"  variant="standard"  onChange={(e) => setManualUsername(e.target.value)}  className='w-80'/>
+</div>
+
+
+
+<div className='mt-5'>
+<TextField id="username-manual" type='password' label="Password" variant="standard" onChange={(e) => setPassword(e.target.value)} className='w-80'  /></div>
+
+<div className='mt-10'>
+<Button variant='contained' color='secondary' onClick={handlePasswordSubmit} >  Submit </Button>
+
+</div>
+</Box>
+
+
+
+</FormControl>
+
+
+
+</motion.div>
 
 
 
