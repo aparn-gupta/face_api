@@ -214,7 +214,7 @@ const NewLogIn = () => {
 
         const postfaceData = async (desArr) => {
             try {
-                const response = await fetch(`${serverAddress}/loginface`, {
+                const response = await fetch(`${serverAddress}/auth/loginface`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -235,8 +235,11 @@ const NewLogIn = () => {
                 // setRecognisedface(result.bestMatchFace, + "(" + result.indicator + ")") 
     
                 console.log(result)
-                sessionStorage.setItem("loggedUserData", JSON.stringify({userId: result.id, name: result.bestMatchFace, token: result.token}))
+               
                 if (result.success) {
+                    sessionStorage.setItem("token", result.token)
+                    sessionStorage.setItem("currentUserId", result.id)
+                    sessionStorage.setItem("currentUserName", result.bestMatchFace)
                     navigate("/dashboard", {
                         state: {
                             username: result.bestMatchFace,
@@ -292,7 +295,7 @@ const NewLogIn = () => {
         console.log({manualUsername, password})
 
         try {
-            const response =  await fetch(`${serverAddress}/loginwithpassword`, {
+            const response =  await fetch(`${serverAddress}/auth/loginwithpassword`, {
                 method: 'POST',
                 headers: {
                     "Content-Type" : "application/json"

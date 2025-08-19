@@ -36,7 +36,7 @@ const NewSignIn = () => {
         const postfaceDataForSignIn = async () => {
             console.log(username)
             try {
-                const response = await fetch(`${serverAddress}/sendfacedata`, {
+                const response = await fetch(`${serverAddress}/auth/sendfacedata`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -229,7 +229,7 @@ const NewSignIn = () => {
         console.log({manualUsername, password})
 
         try {
-            const response =  await fetch(`${serverAddress}/signinwithpassword`, {
+            const response =  await fetch(`${serverAddress}/auth/signinwithpassword`, {
                 method: 'POST',
                 headers: {
                     "Content-Type" : "application/json"

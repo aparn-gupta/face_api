@@ -10,7 +10,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
+
+
+
 function Dashboard () {
+
+
+
 
 
 
@@ -29,6 +35,11 @@ function Dashboard () {
 
     const user = sessionStorage.getItem("currentUserName")
 
+    const serverAddress = import.meta.env.VITE_SERVER_ADDRESS
+
+    // console.log(serverAddress)
+
+
 
 
   const [open, setOpen] = React.useState(false);
@@ -42,12 +53,43 @@ function Dashboard () {
   };
 
 
-  const handleSubmit = (event) => {
+  const sessionToken  = sessionStorage.getItem("token")
+
+  // console.log(sessionToken)
+
+   
+
+
+
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
+    // const email = formJson.email;
+    console.log(formJson);
+    try {
+      const response =  await fetch(`${serverAddress}/info/newfeeling`, {
+          method: 'POST',
+          
+          headers: {
+              "Content-Type" : "application/json",
+              "Authorization" : `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify(formJson)
+
+      })
+
+      const result = await response.json()
+
+
+      console.log(result)
+
+  } catch (err) {
+      console.log(err)
+
+  }
     handleClose();
   };
 
@@ -78,7 +120,7 @@ function Dashboard () {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle></DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
            
@@ -92,7 +134,6 @@ function Dashboard () {
               id="title"
               name="title"
               label="Title"
-              type="email"
               fullWidth
               variant="standard"
             />
@@ -103,7 +144,6 @@ function Dashboard () {
               id="mood"
               name="mood"
               label="Mood"
-              type="email"
               fullWidth
               variant="standard"
             />
@@ -112,17 +152,20 @@ function Dashboard () {
               required
               minRows={10}
               id="feelings"
-              name="feelings"
+              name="description"
               label="Feelings"
-              type="email"
               fullWidth
               variant="standard"
             />
+
+<Button type="submit">Add to My Journal</Button>
+
+
+
           </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Add to My Journal</Button>
         </DialogActions>
       </Dialog>
 
