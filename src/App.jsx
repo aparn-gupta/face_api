@@ -24,6 +24,12 @@ import * as faceapi from "face-api.js"
 
 
 
+//convert to tsx
+
+
+
+
+
 const App = () => {
 
 
