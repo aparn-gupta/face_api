@@ -27,6 +27,9 @@ import Navbar from "./Navbar";
 
 
 //convert to tsx
+//animation for scan
+//stop webcam when not in use
+
 
 
 

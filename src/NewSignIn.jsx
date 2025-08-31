@@ -220,11 +220,10 @@ const NewSignIn = () => {
       {/* <Navbar /> */}
 
       <div>
-        <h1 className="text-3xl mt-6">Create Your InnerNote Account</h1>
-        <div className="flex justify-center">
-          <div className="">
-            <div className=" w-80 h-80 rounded-full flex justify-center animated-circle-border ">
-              <div className="w-72 h-72 rounded-full my-auto">
+        <h1 className={`text-3xl mt-6 ${isExpanded && "w-44"}` }>Create Your InnerNote Account</h1>
+
+        <div className="w-full flex justify-center">
+        <div className="w-72 h-72 rounded-full my-auto">
                 <video
                   autoPlay
                   width={2000}
@@ -233,11 +232,14 @@ const NewSignIn = () => {
                   className="w-72 h-72 rounded-full object-cover"
                 ></video>
               </div>
-            </div>
+        </div>
+
+        <div className="flex justify-center">
 
             <div>
+            <div>
               {" "}
-              <h2 className="mb-5 text-center">
+              <h2 className="mb-5 mt-8 text-center text-slate-600">
                 {" "}
                 Look in the web cam, type a username and hit Submit when it appears{" "}
               </h2>
@@ -256,6 +258,7 @@ const NewSignIn = () => {
               <Button
                 size=""
                 variant="contained"
+                sx={{textTransform: "capitalize"}}
                 onClick={handleSubmit}
                 style={{ display: signInBtn ? "block" : "none" }}
               >
@@ -264,11 +267,11 @@ const NewSignIn = () => {
               </Button>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-16">
               <Button
                 variant="text"
                 style={{textTransform: "capitalize"}}
-                color="success"
+                color="info"
                 sx={{ marginX: "1rem", textTransform: "" }}
                 onClick={() => {
                   setIsExpanded((prev) => !prev);
@@ -277,21 +280,41 @@ const NewSignIn = () => {
                 {" "}
                 Sign in using password{" "}
               </Button>
+
+              <Button
+                variant="text"
+                style={{textTransform: "capitalize"}}
+                color="secondary"
+                sx={{ marginX: "1rem", textTransform: "" }}
+                onClick={() => {
+                 navigate("/login")
+                }}
+              >
+                {" "}
+               Already have an account? Log in
+              </Button>
             </div>
+            </div>
+           
+
+          
           </div>
-        </div>
       </div>
 
       <motion.div
         className="shadow-2xl rounded-md h-[800px] absolute right-0 top-0 bg-white z-1000"
-        variants={{ thin: { width: "0.5rem" }, broad: { width: "75vw" } }}
+        variants={{ thin: { width: "0.5rem" }, broad: { width: "70vw" } }}
         initial="thin"
         animate={isExpanded ? "broad" : "thin"}
         transition={{ type: "tween", duration: 0.4, stiffness: 100 }}
       >
         <div className="p-5 mt-5 w-full flex justify-between">
           <Typography variant="h5" component="h5">
+          <div className="comic-neue-regular">
             Sign In with Password
+
+
+            </div>
           </Typography>
 
           <Button onClick={() => setIsExpanded(false)}>

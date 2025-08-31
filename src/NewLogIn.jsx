@@ -216,6 +216,7 @@ const NewLogIn = () => {
                   username: result.bestMatchFace,
                   id: result.id,
                 },
+                replace: true
               });
 
           }, 1500)
@@ -258,6 +259,7 @@ const NewLogIn = () => {
                   username: result.bestMatchFace,
                   id: result.id,
                 },
+                replace: true
               });
 
           }, 1500)
@@ -295,13 +297,10 @@ const NewLogIn = () => {
                   {errorMessage}
       </Alert>
             </Snackbar>
-            <h1 className="text-3xl mt-5 ">Log In to Your InnerNote Account</h1>
+            <h1 className={`text-3xl mt-5 ${isExpanded && "w-44"}` }>Log In to Your InnerNote Account</h1>
 
-      <div className=" flex justify-center">
-       
-<div>
-
-<div
+            <div className="flex justify-center">
+            <div
           className="w-72 h-72 rounded-full my-auto flex justify-center  mt-10"
           style={{
             position: "relative",
@@ -329,11 +328,18 @@ const NewLogIn = () => {
             }}
           ></canvas>
         </div>
+            </div>
+
+      <div className=" flex justify-center">
+       
+<div>
+
+
         
 
 
    
-     <h2 className="my-5 text-center"> Look in the web cam and hit Submit when it appears </h2>
+     <h2 className="my-5 text-center pt-5 text-slate-600"> Look in the web cam and hit Submit when it appears </h2>
      <div className=" flex justify-center">
 
 <Button
@@ -356,33 +362,51 @@ const NewLogIn = () => {
       </div>
 
 
-    <div className="flex justify-center mt-10">
+    <div className="flex justify-center mt-16">
    <div>
    <Button
      style={{textTransform: "capitalize"}}
           variant="text"
-          color="success"
+          color="info"
           sx={{ marginX: "1rem" }}
           onClick={() => {
             setIsExpanded((prev) => !prev);
           }}
         >
           {" "}
-          Log In in using password{" "}
+          Log In using password{" "}
         </Button>
+
+
+                      <Button
+                        variant="text"
+                        style={{textTransform: "capitalize"}}
+                        color="secondary"
+                        sx={{ marginX: "1rem", textTransform: "" }}
+                        onClick={() => {
+                         navigate("/signin")
+                        }}
+                      >
+                        {" "}
+                       Don't have an account? Sign in
+                      </Button>
    </div>
     </div>
 
       <motion.div
-        className="shadow-2xl rounded-md h-[800px] absolute right-0 top-0 bg-white"
-        variants={{ thin: { width: "0.5rem" }, broad: { width: "75vw" } }}
+        className="shadow-2xl rounded-md h-[800px] absolute right-0 top-0 bg-white comic-neue-regular"
+        variants={{ thin: { width: "0.5rem" }, broad: { width: "70vw" } }}
         initial="thin"
         animate={isExpanded ? "broad" : "thin"}
         transition={{ type: "tween", duration: 0.4, stiffness: 100 }}
       >
           <div className="p-5 mt-5 w-full flex justify-between">
           <Typography variant="h5" component="h5">
-            Log In In with Password
+            <div className="comic-neue-regular">
+            Log In with Password
+
+
+            </div>
           </Typography>
 
           <Button onClick={() => setIsExpanded(false)}>
@@ -414,6 +438,8 @@ const NewLogIn = () => {
 
             <div className="mt-10">
               <Button
+                   style={{textTransform: "capitalize"}}
+
                 variant="contained"
                 color="secondary"
                 onClick={handlePasswordSubmit}
