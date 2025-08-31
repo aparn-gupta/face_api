@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import * as faceapi from "face-api.js"
+import Navbar from './Navbar'
 
 const Login = () => {
   const videoRef = useRef(null)
