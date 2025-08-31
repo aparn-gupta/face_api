@@ -180,16 +180,11 @@ const NewLogIn = () => {
     };
 
 
-    let timeout = setTimeout(() => {
         setInterval(() => {
           findDescriptors();
         }, 2000);
-      }, 3000);
   
-      return () => {
-        clearTimeout(timeout);
-      };
-
+  
 
 
   }, []);
@@ -215,12 +210,15 @@ const NewLogIn = () => {
           sessionStorage.setItem("token", result.loginToken);
           sessionStorage.setItem("currentUserId", result.id);
           sessionStorage.setItem("currentUserName", result.bestMatchFace);
-          navigate("/dashboard", {
-            state: {
-              username: result.bestMatchFace,
-              id: result.id,
-            },
-          });
+          setTimeout(() => {
+            navigate("/dashboard", {
+                state: {
+                  username: result.bestMatchFace,
+                  id: result.id,
+                },
+              });
+
+          }, 1500)
         } 
     
    
@@ -254,7 +252,15 @@ const NewLogIn = () => {
         sessionStorage.setItem("currentUserId", result.userId);
         sessionStorage.setItem("currentUserName", result.userName);
 
-        navigate("/dashboard");
+        setTimeout(() => {
+            navigate("/dashboard", {
+                state: {
+                  username: result.bestMatchFace,
+                  id: result.id,
+                },
+              });
+
+          }, 1500)
       }
 
       console.log(result);
@@ -266,8 +272,8 @@ const NewLogIn = () => {
   // console.log(descriptorArr)
 
   return (
-    <div className="">
-      <Navbar />
+    <div className="px-8 comic-neue-regular">
+      {/* <Navbar /> */}
        <Snackbar
               anchorOrigin={{ vertical: "top", horizontal: "center" }}
               open={successAlertOpen}
@@ -289,7 +295,7 @@ const NewLogIn = () => {
                   {errorMessage}
       </Alert>
             </Snackbar>
-            <h1 className="text-3xl mt-5">Log In to Your InnerNote Account</h1>
+            <h1 className="text-3xl mt-5 ">Log In to Your InnerNote Account</h1>
 
       <div className=" flex justify-center">
        
@@ -327,14 +333,15 @@ const NewLogIn = () => {
 
 
    
-     <h2 className="my-5 text-center"> Look in the camera and click Submit </h2>
+     <h2 className="my-5 text-center"> Look in the web cam and hit Submit when it appears </h2>
      <div className=" flex justify-center">
 
 <Button
               size=""
+              sx={{textTransform: "capitalize"}}
               variant="contained"
               onClick={postfaceData}
-              // style={{ display: loginBtn ? "block" : "none" }}
+              style={{ display: loginBtn ? "block" : "none" }}
             >
               {" "}
               Submit{" "}
@@ -350,7 +357,9 @@ const NewLogIn = () => {
 
 
     <div className="flex justify-center mt-10">
-    <Button
+   <div>
+   <Button
+     style={{textTransform: "capitalize"}}
           variant="text"
           color="success"
           sx={{ marginX: "1rem" }}
@@ -361,6 +370,7 @@ const NewLogIn = () => {
           {" "}
           Log In in using password{" "}
         </Button>
+   </div>
     </div>
 
       <motion.div

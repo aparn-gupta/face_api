@@ -11,6 +11,8 @@ import Dashboard from './Dashboard'
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import * as faceapi from "face-api.js"
+import Navbar from "./Navbar";
+
 
 
 
@@ -78,8 +80,10 @@ const App = () => {
 
   return (
  <ThemeProvider theme={theme}>
+
   <BrowserRouter >
-<div className='p-8'>
+  <Navbar/>
+<div className=''>
 <Routes>
  <Route path='/' element={ <Home />} />
 

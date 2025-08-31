@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Card, CardContent, Typography, Box } from "@mui/material";
+import DescriptionIcon from '@mui/icons-material/Description';
 import Navbar from "./Navbar";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -159,10 +160,10 @@ function Dashboard() {
 
   return (
     <div>
-      <div className="">
-        <Navbar />
+      <div className="px-8">
+        {/* <Navbar /> */}
         <div className="mt-5 flex justify-between">
-          <h1 className="text-3xl font-bold capitalize "> Welcome {user} !</h1>
+          <h1 className="text-3xl font-bold capitalize "> Welcome  <span className="text-transparent bg-clip-text bg-gradient-to-l  from-fuchsia-500 via-green-500 to-blue-500 ">{user} </span> !</h1>
 
           <div>
             <Button
@@ -170,17 +171,19 @@ function Dashboard() {
               onClick={handleClickOpen}
               sx={{ textTransform: "capitalize" }}
             >
-              <AddIcon /> <span className="ml-2"> New Journal Page</span>
+              <DescriptionIcon />
+            <span className="ml-2"> New Journal Page</span>
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap w-[90%] mx-auto justify-between space-y-6 mt-8">
+      <div className="flex flex-wrap w-[90%] mx-auto space-y-4 mt-8 ">
         {allFeelingData.map((item, i) => {
           return (
             <Card
               key={i}
+              className="mx-2"
               sx={{ width: "32%", background: findMoodColour(item.mood) }}
             >
               <CardContent>
@@ -213,9 +216,10 @@ function Dashboard() {
                 </Typography>
                 <Typography
                   variant="body2"
+                  // className="inter-comicneu"
                   sx={{ color: "text.secondary", height: "13rem" }}
                 >
-                  {item.feeling_notes}
+                <div className="comic-neue-regular">  {item.feeling_notes}</div>
                 </Typography>
               </CardContent>
             </Card>
@@ -237,7 +241,7 @@ function Dashboard() {
               <h3> How are you feeling today?</h3>
             </DialogContentText>
 
-            <form onSubmit={handleSubmit} id="subscription-form">
+            <form onSubmit={handleSubmit} id="subscription-form" className="comic-neue-regular ">
               <TextField
                 autoFocus
                 margin="dense"
@@ -266,6 +270,7 @@ function Dashboard() {
                 fullWidth
                 variant="standard"
                 slotProps={{ maxlength: 795 }}
+                className="handlee-regular"
               />
 
               <div className="mt-5">
@@ -275,13 +280,13 @@ function Dashboard() {
                   color="success"
                   sx={{ textTransform: "capitalize" }}
                 >
-                  Add to My Journal
+                  <AddIcon />   Add to My Journal
                 </Button>
               </div>
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}> Cancel</Button>
           </DialogActions>
         </Dialog>
       </div>

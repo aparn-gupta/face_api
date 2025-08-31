@@ -25,6 +25,27 @@ border: 2px solid magenta
 }
 
 
+.handlee-regular {
+    font-family: "Handlee", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+
+.comic-neue-regular {
+    font-family: "Comic Neue", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .bg-cloudy {
+    background-color: rgba(255, 255, 255, 0.468) ;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+
 .custom-line {
     /* background-color: blueviolet; */
     /* background-color: rgba(112, 128, 144, 0.468); */

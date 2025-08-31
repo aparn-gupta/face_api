@@ -148,15 +148,12 @@ const NewSignIn = () => {
       }
     };
 
-    let timeout = setTimeout(() => {
       setInterval(() => {
         findDescriptors();
       }, 2000);
-    }, 3000);
+  
 
-    return () => {
-      clearTimeout(timeout);
-    };
+  
   }, []);
 
   const handleSubmit = () => {
@@ -197,7 +194,7 @@ const NewSignIn = () => {
   // console.log(descriptorArr)
 
   return (
-    <div className="">
+    <div className="px-8 comic-neue-regular">
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={successAlertOpen}
@@ -220,7 +217,7 @@ const NewSignIn = () => {
         </Alert>
       </Snackbar>
 
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div>
         <h1 className="text-3xl mt-6">Create Your InnerNote Account</h1>
@@ -242,7 +239,7 @@ const NewSignIn = () => {
               {" "}
               <h2 className="mb-5 text-center">
                 {" "}
-                Look in the camera and click Submit{" "}
+                Look in the web cam, type a username and hit Submit when it appears{" "}
               </h2>
             </div>
 
@@ -270,6 +267,7 @@ const NewSignIn = () => {
             <div className="mt-10">
               <Button
                 variant="text"
+                style={{textTransform: "capitalize"}}
                 color="success"
                 sx={{ marginX: "1rem", textTransform: "" }}
                 onClick={() => {
@@ -325,6 +323,7 @@ const NewSignIn = () => {
 
             <div className="mt-10">
               <Button
+               style={{textTransform: "capitalize"}}
                 variant="contained"
                 color="secondary"
                 onClick={handlePasswordSubmit}
