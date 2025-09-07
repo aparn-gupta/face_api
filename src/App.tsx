@@ -1,0 +1,84 @@
+import React, { useEffect } from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import SignIn from "./SignIn";
+// import Login from "./Login";
+import Home from "./Home";
+// import Login2 from "./Login2";
+import NewSignIn from "./NewSignIn";
+import NewLogIn from "./NewLogIn";
+import Dashboard from "./Dashboard";
+
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import * as faceapi from "face-api.js";
+import Navbar from "./Navbar";
+
+//tasks pending
+//backend:  Do not allow registering same face. Send face already registered.
+//frontend: detects one face only. When sees multiple faces, throws a warning or goes for most focussed person.
+//frontend: detects face/watches for the descriptor araay to fill
+
+//convert to tsx
+//animation for scan
+//stop webcam when not in use
+
+const App = () => {
+  useEffect(() => {
+    const loadModels = async () => {
+      try {
+        await Promise.all([
+          faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+          faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+          faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+        ]);
+
+        console.log("models loaded");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    loadModels();
+  }, []);
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        light: "#4dabf5",
+        main: "#2196f3",
+        dark: "#1769aa",
+        contrastText: "#fff",
+      },
+      secondary: {
+        // light: '#ff7961',
+        main: "#f73378",
+        // dark: '#ba000d',
+        // contrastText: 'white',
+      },
+    },
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Navbar />
+        <div className="">
+          <Routes>
+            <Route path="/" element={<Home />} />
+
+            {/* <Route path='/testing' element={ <Login />} />
+  <Route path='/testing2' element={ <Login2 />} />
+
+  <Route path='/testing2' element={ <SignIn />} /> */}
+
+            <Route path="/signin" element={<NewSignIn />} />
+            <Route path="/login" element={<NewLogIn />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+};
+
+export default App;

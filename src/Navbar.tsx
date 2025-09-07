@@ -5,18 +5,19 @@ import {Popper, Box} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-    const userName = sessionStorage.getItem("currentUserName")
+
+   let   userName = sessionStorage.getItem("currentUserName")   ?? ""
     const navigate = useNavigate()
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
-    const handleClick = (event) => {
-        if (sessionStorage.getItem("token")) {
-            setAnchorEl(anchorEl ? null : event.currentTarget);
-
-
-        }
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      if (sessionStorage.getItem("token")) {
+ 
+      setAnchorEl(anchorEl ? null : event.currentTarget);
+      }
     };
+
   
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popper' : undefined;
@@ -36,7 +37,7 @@ const Navbar = () => {
   Toggle Popper
 </button> */}
 
-      <Avatar src="./abc.jpg" alt={userName} aria-describedby={id} type="button" onClick={handleClick} >
+      <Avatar src="./abc.jpg" alt={userName} aria-describedby={id}  onClick={handleClick} >
         {/* {userName && userName.split[0]} */}
 
       </Avatar>

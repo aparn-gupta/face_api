@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { animate, motion } from "framer-motion";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
@@ -24,9 +24,9 @@ import CloseIcon from "@mui/icons-material/Close";
 const NewSignIn = () => {
   const serverAddress = import.meta.env.VITE_SERVER_ADDRESS;
 
-  const webcamEl = useRef(null);
+  const webcamEl = useRef<HTMLVideoElement>(null);
 
-  const [formdata, setFormData] = useState([]);
+  const [formdata, setFormData] = useState<any[]>([]);
   const [username, setUsername] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -54,15 +54,20 @@ const NewSignIn = () => {
         body: JSON.stringify({ empName: username, descriptorArray: formdata }),
       });
 
-      const result = await response.json();
+      const result: {success: boolean, message: string} = await response.json();
+      console.log(result)
 
       if (result.success) {
-        setSuccess(true);
-      } 
+        setSuccessAlertOpen(true);
+      }  else {
+        setErrorAlertOpen(true);
+        setErrorMessage(`Error signing in: ${result.message}`);
+
+      }
     } catch (err) {
       console.log(err);
       setErrorAlertOpen(true);
-      setErrorMessage(`Error signing in: ${result.message}`);
+      setErrorMessage(`Error signing in: ${err}`);
     }
   };
 
@@ -88,7 +93,7 @@ const NewSignIn = () => {
     const findDescriptors = async () => {
       try {
         if (webcamEl.current) {
-          const detections = await faceapi
+          const detections: any[] = await faceapi
             .detectAllFaces(webcamEl.current)
             .withFaceLandmarks()
             .withFaceDescriptors();
@@ -133,7 +138,6 @@ const NewSignIn = () => {
 
             setSignInBtn(false);
           } else {
-            setDetectionScoreMessage("");
             setErrorAlertOpen(false);
 
             setSignInBtn(true);
@@ -162,7 +166,7 @@ const NewSignIn = () => {
     postfaceDataForSignIn();
   };
 
-  const handlePasswordSubmit = async (e) => {
+  const handlePasswordSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log({ manualUsername, password });
 
@@ -187,7 +191,7 @@ const NewSignIn = () => {
     } catch (err) {
       console.log(err);
       setErrorAlertOpen(true);
-      setErrorMessage(`Error signing in: ${result.message}`);
+      setErrorMessage(`Error signing in: ${err}`);
     }
   };
 
@@ -256,7 +260,6 @@ const NewSignIn = () => {
               </FormControl>
 
               <Button
-                size=""
                 variant="contained"
                 sx={{textTransform: "capitalize"}}
                 onClick={handleSubmit}

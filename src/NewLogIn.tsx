@@ -15,16 +15,15 @@ import {
   Typography,
 } from "@mui/material";
 import { animate, motion } from "framer-motion";
-import Navbar from "./Navbar";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
 
 const NewLogIn = () => {
-  const webcamEl = useRef(null);
+  const webcamEl = useRef<HTMLVideoElement>(null);
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const navigate = useNavigate();
 
@@ -41,7 +40,7 @@ const NewLogIn = () => {
 
   const [manualUsername, setManualUsername] = useState("");
     const [loginBtn, setLogInBtn] = useState(false);
-    const [desArr, setDesArr] = useState()
+    const [desArr, setDesArr] = useState<any[]>()
   
 
   const [password, setPassword] = useState("");
@@ -80,7 +79,7 @@ const NewLogIn = () => {
 
           // }
 
-          const detections = await faceapi
+          const detections: any[] = await faceapi
             .detectAllFaces(webcamEl.current)
             .withFaceLandmarks()
             .withFaceDescriptors();
@@ -233,7 +232,7 @@ const NewLogIn = () => {
     }
   };
 
-  const handlePasswordSubmit = async (e) => {
+  const handlePasswordSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log({ manualUsername, password });
 
@@ -343,7 +342,6 @@ const NewLogIn = () => {
      <div className=" flex justify-center">
 
 <Button
-              size=""
               sx={{textTransform: "capitalize"}}
               variant="contained"
               onClick={postfaceData}

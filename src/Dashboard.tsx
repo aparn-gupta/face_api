@@ -15,11 +15,12 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import DescriptionIcon from '@mui/icons-material/Description';
+import type Feelings from "./types";
 import Navbar from "./Navbar";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
 
 function Dashboard() {
   const moodsList = [
@@ -65,13 +66,13 @@ function Dashboard() {
     },
   ];
 
-  const findMoodColour = (moodName) => {
+  const findMoodColour = (moodName: string) => {
     return moodsList.find(
       (item) => item.mood.toLocaleLowerCase() == moodName.toLocaleLowerCase()
     )?.bgColor;
   };
 
-  const findMoodFontColour = (moodName) => {
+  const findMoodFontColour = (moodName: string) => {
     return moodsList.find(
       (item) => item.mood.toLocaleLowerCase() == moodName.toLocaleLowerCase()
     )?.fontColor;
@@ -96,7 +97,7 @@ function Dashboard() {
   // console.log(serverAddress)
 
   const [open, setOpen] = React.useState(false);
-  const [allFeelingData, setAllFeelingData] = useState([]);
+  const [allFeelingData, setAllFeelingData] = useState<Feelings[]>([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -132,7 +133,7 @@ function Dashboard() {
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries(formData.entries());
@@ -228,9 +229,9 @@ function Dashboard() {
 
         <Dialog
           open={open}
-          slots={{
-            transition: Transition,
-          }}
+          // slots={{
+          //   transition: Transition,
+          // }}
           keepMounted
           onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
@@ -269,7 +270,7 @@ function Dashboard() {
                 label="Feelings"
                 fullWidth
                 variant="standard"
-                slotProps={{ maxlength: 795 }}
+                inputProps={{ maxlength: 795 }}
                 className="handlee-regular"
               />
 
