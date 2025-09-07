@@ -59,6 +59,9 @@ const NewSignIn = () => {
 
       if (result.success) {
         setSuccessAlertOpen(true);
+        navigate("/login", {
+          replace: true
+        })
       }  else {
         setErrorAlertOpen(true);
         setErrorMessage(`Error signing in: ${result.message}`);
@@ -184,7 +187,9 @@ const NewSignIn = () => {
         setSuccessAlertOpen(true);
       }
       setTimeout(() => {
-        navigate("/login");
+        navigate("/login", {
+          replace: true
+        });
       }, 2000);
 
       console.log(result);
