@@ -12,6 +12,7 @@ import Dashboard from "./Dashboard";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import * as faceapi from "face-api.js";
 import Navbar from "./Navbar";
+// import Test from "./Test";
 
 //tasks pending
 //backend:  Do not allow registering same face. Send face already registered.
@@ -70,6 +71,9 @@ const App = () => {
   <Route path='/testing2' element={ <Login2 />} />
 
   <Route path='/testing2' element={ <SignIn />} /> */}
+
+{/* <Route path='/test' element={ <Test />} />  */}
+
 
             <Route path="/signin" element={<NewSignIn />}  />
             <Route path="/login" element={<NewLogIn />} />
