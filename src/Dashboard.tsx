@@ -159,7 +159,7 @@ function Dashboard() {
 
       const result = await response.json();
 
-      if (result.sucess) {
+      if (result.success) {
         setSuccessAlertOpen(true);
 
 
@@ -175,6 +175,7 @@ function Dashboard() {
       console.log(err);
     }
     handleClose();
+    fetchFeelings()
   };
 
   return (
