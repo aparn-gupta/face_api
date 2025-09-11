@@ -46,7 +46,7 @@ const NewSignIn = () => {
   const postfaceDataForSignIn = async () => {
     console.log(username);
     try {
-      const response = await fetch(`${serverAddress}/auth/sendfacedata`, {
+      const response = await fetch(`${serverAddress}/auth/registerface`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,13 +151,18 @@ const NewSignIn = () => {
           setFormData(descriptorArrayResult);
         }
       } catch (err) {
-        console.log(err);
+       
+          setErrorAlertOpen(true)
+        setErrorMessage(`Error reading face: ${err}`)
+
+       
+        
       }
     };
 
       setInterval(() => {
         findDescriptors();
-      }, 2000);
+      }, 3000);
   
 
   
@@ -183,8 +188,12 @@ const NewSignIn = () => {
       });
 
       const result = await response.json();
-      if (response.ok) {
+      if (result.success) {
         setSuccessAlertOpen(true);
+      } else {
+        setErrorAlertOpen(true)
+      setErrorMessage(`Error signing in: ${result.message}`)
+
       }
       setTimeout(() => {
         navigate("/login", {
@@ -250,7 +259,7 @@ const NewSignIn = () => {
               {" "}
               <h2 className="mb-5 mt-8 text-center text-slate-600">
                 {" "}
-                Look in the web cam, type a username and hit Submit when it appears{" "}
+                Look in the web cam, type a username and hit Register Face when it appears{" "}
               </h2>
             </div>
 
@@ -260,6 +269,7 @@ const NewSignIn = () => {
                 <Input
                   id="my-input"
                   aria-describedby="my-helper-text"
+                  required
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </FormControl>
@@ -271,7 +281,7 @@ const NewSignIn = () => {
                 style={{ display: signInBtn ? "block" : "none" }}
               >
                 {" "}
-                Submit{" "}
+                Register Face{" "}
               </Button>
             </div>
 
@@ -338,6 +348,7 @@ const NewSignIn = () => {
                 variant="standard"
                 onChange={(e) => setManualUsername(e.target.value)}
                 className="w-80"
+                required
               />
             </div>
 
@@ -349,6 +360,7 @@ const NewSignIn = () => {
                 variant="standard"
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-80"
+                required
               />
             </div>
 

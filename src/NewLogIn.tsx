@@ -181,7 +181,7 @@ const NewLogIn = () => {
 
         setInterval(() => {
           findDescriptors();
-        }, 2000);
+        }, 3000);
   
   
 
@@ -219,7 +219,11 @@ const NewLogIn = () => {
               });
 
           }, 1500)
-        } 
+        }  else {
+          setErrorAlertOpen(true)
+        setErrorMessage(`Error logging in: ${result.message}`)
+
+        }
     
    
 
@@ -262,11 +266,17 @@ const NewLogIn = () => {
               });
 
           }, 1500)
+      } else {
+        setErrorAlertOpen(true)
+      setErrorMessage(`Error logging in: ${result.message}`)
+
       }
 
       console.log(result);
     } catch (err) {
       console.log(err);
+      setErrorAlertOpen(true)
+      setErrorMessage(`Error logging in: ${err}`)
     }
   };
 
@@ -338,7 +348,7 @@ const NewLogIn = () => {
 
 
    
-     <h2 className="my-5 text-center pt-5 text-slate-600"> Look in the web cam and hit Submit when it appears </h2>
+     <h2 className="my-5 text-center pt-5 text-slate-600"> Look in the web cam and hit Verify when it appears </h2>
      <div className=" flex justify-center">
 
 <Button
@@ -348,7 +358,7 @@ const NewLogIn = () => {
               style={{ display: loginBtn ? "block" : "none" }}
             >
               {" "}
-              Submit{" "}
+              Verify{" "}
             </Button>
      </div>
 
@@ -420,6 +430,7 @@ const NewLogIn = () => {
                 variant="standard"
                 onChange={(e) => setManualUsername(e.target.value)}
                 className="w-80"
+                required
               />
             </div>
 
@@ -431,6 +442,7 @@ const NewLogIn = () => {
                 variant="standard"
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-80"
+                required
               />
             </div>
 

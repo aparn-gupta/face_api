@@ -13,7 +13,7 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, Alert, Snackbar } from "@mui/material";
 import DescriptionIcon from '@mui/icons-material/Description';
 import type Feelings from "./types";
 import Navbar from "./Navbar";
@@ -91,6 +91,8 @@ function Dashboard() {
   }, []);
 
   const user = sessionStorage.getItem("currentUserName");
+  const userId = sessionStorage.getItem("currentUserId");
+
 
   const serverAddress = import.meta.env.VITE_SERVER_ADDRESS;
 
@@ -98,6 +100,11 @@ function Dashboard() {
 
   const [open, setOpen] = React.useState(false);
   const [allFeelingData, setAllFeelingData] = useState<Feelings[]>([]);
+     const [errorMessage, setErrorMessage] = useState("");
+  
+   
+     const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+     const [errorAlertOpen, setErrorAlertOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -140,7 +147,7 @@ function Dashboard() {
     // const email = formJson.email;
     console.log(formJson);
     try {
-      const response = await fetch(`${serverAddress}/info/newfeeling`, {
+      const response = await fetch(`${serverAddress}/info/newfeeling/${userId}`, {
         method: "POST",
 
         headers: {
@@ -152,6 +159,17 @@ function Dashboard() {
 
       const result = await response.json();
 
+      if (result.sucess) {
+        setSuccessAlertOpen(true);
+
+
+      } else {
+        setErrorAlertOpen(true)
+      setErrorMessage(`Error logging in: ${result.message}`)
+
+      }
+  
+
       console.log(result);
     } catch (err) {
       console.log(err);
@@ -161,6 +179,28 @@ function Dashboard() {
 
   return (
     <div>
+
+            <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    open={successAlertOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setSuccessAlertOpen(false)}
+                  >
+                    <Alert variant="filled" severity="success" className="">
+                      Journal record added!
+                    </Alert>
+                  </Snackbar>
+            
+                  <Snackbar
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    open={errorAlertOpen}
+                    autoHideDuration={4000}
+                    onClose={() => setErrorAlertOpen(false)}
+                  >
+                       <Alert variant="filled" severity="error">
+                        {errorMessage}
+            </Alert>
+                  </Snackbar>
       <div className="px-8">
         {/* <Navbar /> */}
         <div className="mt-5 flex justify-between">
