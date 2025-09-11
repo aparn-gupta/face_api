@@ -90,13 +90,16 @@ const NewLogIn = () => {
                   "Multiple faces detected. Please focus only one face in the view"
                 );
                 setLogInBtn(false);
+                
               } else if (detections.length === 0) {
                 setErrorAlertOpen(true)
     
                 setErrorMessage(
                   "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition"
                 );
+                
                 setLogInBtn(false);
+                return
               } else {
                 if (detections.length === 1) {
                     setErrorAlertOpen(false)

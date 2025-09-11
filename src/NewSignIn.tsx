@@ -114,6 +114,7 @@ const NewSignIn = () => {
               "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition"
             );
             setSignInBtn(false);
+            return
           } else {
             if (detections.length === 1) {
               setErrorAlertOpen(false);
