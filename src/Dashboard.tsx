@@ -120,7 +120,7 @@ function Dashboard() {
 
   const fetchFeelings = async () => {
     try {
-      const feelingUrl = `${serverAddress}/info/allfeelings`;
+      const feelingUrl = `${serverAddress}/info/allfeelings/${userId}`;
       const response = await fetch(feelingUrl, {
         method: "GET",
         headers: {
