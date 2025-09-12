@@ -258,6 +258,8 @@ const NewLogIn = () => {
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("currentUserId", result.userId);
         sessionStorage.setItem("currentUserName", result.userName);
+        setSuccessAlertOpen(true);
+
 
         setTimeout(() => {
             navigate("/dashboard", {

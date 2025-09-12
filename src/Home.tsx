@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import { useTheme } from '@mui/material'
 import { Typography } from '@mui/material'
+import bubblebg from './assets/bubble_bg.gif'
 
 
 const Home = () => {
@@ -21,7 +22,7 @@ const Home = () => {
 
         
 
-        <img src='https://i.pinimg.com/originals/0e/80/3f/0e803ff6dbf0f871b957238c6e3df18b.gif' className='absolute top-0 left-0 w-full h-full object-cover' />
+        <img src={bubblebg} className='absolute top-0 left-0 w-full h-full object-cover' />
 
 
         {/* <img src='https://giffiles.alphacoders.com/758/75803.gif' className='absolute top-0 left-0 w-full h-full object-cover' /> */}

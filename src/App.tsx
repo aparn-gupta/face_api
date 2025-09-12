@@ -14,14 +14,8 @@ import * as faceapi from "face-api.js";
 import Navbar from "./Navbar";
 // import Test from "./Test";
 
-//tasks pending
-//backend:  Do not allow registering same face. Send face already registered.
-//frontend: detects one face only. When sees multiple faces, throws a warning or goes for most focussed person.
-//frontend: detects face/watches for the descriptor araay to fill
 
-//convert to tsx
 //animation for scan
-//stop webcam when not in use
 
 const App = () => {
   useEffect(() => {

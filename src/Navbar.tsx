@@ -2,7 +2,8 @@ import React from 'react'
 import { Button, Card, CardContent } from '@mui/material'
 import Avatar from '@mui/material/Avatar';
 import {Popper, Box} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import logo  from './assets/notes_vector.jpg'
 
 const Navbar = () => {
 
@@ -26,10 +27,15 @@ const Navbar = () => {
        {/* <Card 
        > */}
       <CardContent className=' shadow-md h-20 flex justify-between' >
-     <div>
+   <Link to="/" > 
+ <div className='flex'>
+ <img  className='w-10 h-10 mr-2 my-auto' src={logo} alt='logo' />
+   <div>
      <h1 className="text-xl w-24 text-transparent bg-clip-text bg-gradient-to-l  from-fuchsia-500 via-green-500 to-blue-500 ">InnerNote</h1>
      <h3 className='text-zinc-400 text-base comic-neue-regular'>Your Safe Space for Your Feelings</h3>
      </div>
+ </div>
+     </Link>
 
 
       <div>

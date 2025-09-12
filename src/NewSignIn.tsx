@@ -59,9 +59,11 @@ const NewSignIn = () => {
 
       if (result.success) {
         setSuccessAlertOpen(true);
+       setTimeout(() => {
         navigate("/login", {
           replace: true
         })
+       }, 2500)
       }  else {
         setErrorAlertOpen(true);
         setErrorMessage(`Error signing in: ${result.message}`);
@@ -191,16 +193,17 @@ const NewSignIn = () => {
       const result = await response.json();
       if (result.success) {
         setSuccessAlertOpen(true);
+        setTimeout(() => {
+          navigate("/login", {
+            replace: true
+          });
+        }, 2000);
       } else {
         setErrorAlertOpen(true)
       setErrorMessage(`Error signing in: ${result.message}`)
 
       }
-      setTimeout(() => {
-        navigate("/login", {
-          replace: true
-        });
-      }, 2000);
+    
 
       console.log(result);
     } catch (err) {
@@ -221,7 +224,7 @@ const NewSignIn = () => {
         onClose={() => setSuccessAlertOpen(false)}
       >
         <Alert variant="filled" severity="success" className="">
-          Signed in successfully!
+          Signed in successfully! Please login now
         </Alert>
       </Snackbar>
 

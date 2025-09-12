@@ -165,7 +165,7 @@ function Dashboard() {
 
       } else {
         setErrorAlertOpen(true)
-      setErrorMessage(`Error logging in: ${result.message}`)
+      setErrorMessage(`Error recording Journal Entry: ${result.message}`)
 
       }
   
