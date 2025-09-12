@@ -18,6 +18,7 @@ import Navbar from "./Navbar";
 //animation for scan
 
 const App = () => {
+  
   useEffect(() => {
     const loadModels = async () => {
       try {
