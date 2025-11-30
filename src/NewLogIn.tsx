@@ -19,6 +19,7 @@ import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
+import loaderGif from './assets/pink-loader.gif'
 
 const NewLogIn = () => {
   const webcamEl = useRef<HTMLVideoElement>(null);
@@ -44,17 +45,20 @@ const NewLogIn = () => {
   
 
   const [password, setPassword] = useState("");
+const streamRef = useRef<MediaStream>(null)
 
   useEffect(() => {
     const startWebCam = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
+        streamRef.current = await navigator.mediaDevices.getUserMedia({
           audio: false,
           video: true,
         });
 
+        // console.log(stream)
+
         if (webcamEl.current) {
-          webcamEl.current.srcObject = stream;
+          webcamEl.current.srcObject = streamRef.current;
           webcamEl.current.play();
         }
       } catch (err) {
@@ -191,6 +195,23 @@ const NewLogIn = () => {
 
   }, []);
 
+  const stopStream = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop())
+      console.log("streaming stopped 1")
+    }
+
+    if (webcamEl.current) {
+      webcamEl.current.srcObject = null
+      console.log("streaming stopped 2")
+    }
+
+    streamRef.current = null
+    console.log("streaming stopped 3")
+
+   
+  }
+
   const postfaceData = async () => {
     console.log(desArr)
     try {
@@ -207,12 +228,18 @@ const NewLogIn = () => {
    
       if (result.success) {
         console.log(result)
+        stopStream()
           setSuccessAlertOpen(true);
+
+       
+          
 
           sessionStorage.setItem("token", result.loginToken);
           sessionStorage.setItem("currentUserId", result.id);
           sessionStorage.setItem("currentUserName", result.bestMatchFace);
+          
           setTimeout(() => {
+            
             navigate("/dashboard", {
                 state: {
                   username: result.bestMatchFace,
@@ -255,6 +282,7 @@ const NewLogIn = () => {
       const result = await response.json();
 
       if (result.success) {
+        stopStream()
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("currentUserId", result.userId);
         sessionStorage.setItem("currentUserName", result.userName);
@@ -354,7 +382,10 @@ const NewLogIn = () => {
 
    
      <h2 className="my-5 text-center pt-5 text-slate-600"> Look in the web cam and hit Verify when it appears </h2>
-     <div className=" flex justify-center">
+     <div className=" flex justify-center ">
+
+      <div>
+      <div  > <img src={loaderGif}  className={`${loginBtn ? 'hidden' : 'block'} w-12 h-12 mx-auto`} /> </div>
 
 <Button
               sx={{textTransform: "capitalize"}}
@@ -363,8 +394,12 @@ const NewLogIn = () => {
               style={{ display: loginBtn ? "block" : "none" }}
             >
               {" "}
+              
               Verify{" "}
             </Button>
+      </div>
+
+    
      </div>
 
       

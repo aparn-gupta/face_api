@@ -20,6 +20,8 @@ import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
+import loaderGif from './assets/pink-loader.gif'
+
 
 const NewSignIn = () => {
   const serverAddress = import.meta.env.VITE_SERVER_ADDRESS;
@@ -43,49 +45,33 @@ const NewSignIn = () => {
 
   const navigate = useNavigate();
 
-  const postfaceDataForSignIn = async () => {
-    console.log(username);
-    try {
-      const response = await fetch(`${serverAddress}/auth/registerface`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ empName: username, descriptorArray: formdata }),
-      });
+  const streamRef = useRef<MediaStream>(null)
 
-      const result: {success: boolean, message: string} = await response.json();
-      console.log(result)
-
-      if (result.success) {
-        setSuccessAlertOpen(true);
-       setTimeout(() => {
-        navigate("/login", {
-          replace: true
-        })
-       }, 2500)
-      }  else {
-        setErrorAlertOpen(true);
-        setErrorMessage(`Error signing in: ${result.message}`);
-
-      }
-    } catch (err) {
-      console.log(err);
-      setErrorAlertOpen(true);
-      setErrorMessage(`Error signing in: ${err}`);
+  const stopStream = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop())
     }
-  };
+
+    if (webcamEl.current) {
+      webcamEl.current.srcObject = null
+  }
+
+  streamRef.current = null
+
+}
+
+
 
   useEffect(() => {
     const startWebCam = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
+        streamRef.current = await navigator.mediaDevices.getUserMedia({
           audio: false,
           video: true,
         });
 
         if (webcamEl.current) {
-          webcamEl.current.srcObject = stream;
+          webcamEl.current.srcObject = streamRef.current;
           webcamEl.current.play();
         }
       } catch (err) {
@@ -171,6 +157,42 @@ const NewSignIn = () => {
   
   }, []);
 
+
+  const postfaceDataForSignIn = async () => {
+    console.log(username);
+    try {
+      const response = await fetch(`${serverAddress}/auth/registerface`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ empName: username, descriptorArray: formdata }),
+      });
+
+      const result: {success: boolean, message: string} = await response.json();
+      console.log(result)
+
+      if (result.success) {
+        stopStream()
+        setSuccessAlertOpen(true);
+       setTimeout(() => {
+        navigate("/login", {
+          replace: true
+        })
+       }, 2500)
+      }  else {
+        setErrorAlertOpen(true);
+        setErrorMessage(`Error signing in: ${result.message}`);
+
+      }
+    } catch (err) {
+      console.log(err);
+      setErrorAlertOpen(true);
+      setErrorMessage(`Error signing in: ${err}`);
+    }
+  };
+
+
   const handleSubmit = () => {
     console.log(formdata);
 
@@ -192,6 +214,7 @@ const NewSignIn = () => {
 
       const result = await response.json();
       if (result.success) {
+        stopStream()
         setSuccessAlertOpen(true);
         setTimeout(() => {
           navigate("/login", {
@@ -277,6 +300,8 @@ const NewSignIn = () => {
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </FormControl>
+
+              <div  > <img src={loaderGif}  className={`${signInBtn ? 'hidden' : 'block'} w-12 h-12 mx-auto`} /> </div>
 
               <Button
                 variant="contained"
