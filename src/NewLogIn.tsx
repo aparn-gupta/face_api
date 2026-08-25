@@ -19,7 +19,7 @@ import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
-import loaderGif from './assets/pink-loader.gif'
+import loaderGif from "./assets/pink-loader.gif";
 
 const NewLogIn = () => {
   const webcamEl = useRef<HTMLVideoElement>(null);
@@ -30,22 +30,20 @@ const NewLogIn = () => {
 
   const serverAddress = import.meta.env.VITE_SERVER_ADDRESS;
 
-  
-   const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
- 
-   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
-   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [manualUsername, setManualUsername] = useState("");
-    const [loginBtn, setLogInBtn] = useState(false);
-    const [desArr, setDesArr] = useState<any[]>()
-  
+  const [loginBtn, setLogInBtn] = useState(false);
+  const [desArr, setDesArr] = useState<any[]>();
 
   const [password, setPassword] = useState("");
-const streamRef = useRef<MediaStream>(null)
+  const streamRef = useRef<MediaStream>(null);
 
   useEffect(() => {
     const startWebCam = async () => {
@@ -88,31 +86,30 @@ const streamRef = useRef<MediaStream>(null)
             .withFaceLandmarks()
             .withFaceDescriptors();
 
-            if (detections.length > 1) {
-                setErrorAlertOpen(true)
-                setErrorMessage(
-                  "Multiple faces detected. Please focus only one face in the view"
-                );
-                setLogInBtn(false);
-                
-              } else if (detections.length === 0) {
-                setErrorAlertOpen(true)
-    
-                setErrorMessage(
-                  "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition"
-                );
-                
-                setLogInBtn(false);
-                return
-              } else {
-                if (detections.length === 1) {
-                    setErrorAlertOpen(false)
-    
-                  setLogInBtn(true);
-                }
-              }
+          if (detections.length > 1) {
+            setErrorAlertOpen(true);
+            setErrorMessage(
+              "Multiple faces detected. Please focus only one face in the view",
+            );
+            setLogInBtn(false);
+          } else if (detections.length === 0) {
+            setErrorAlertOpen(true);
 
-              console.log(detections)
+            setErrorMessage(
+              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition",
+            );
+
+            setLogInBtn(false);
+            return;
+          } else {
+            if (detections.length === 1) {
+              setErrorAlertOpen(false);
+
+              setLogInBtn(true);
+            }
+          }
+
+          console.log(detections);
 
           let faceWithBestDetection = detections[0];
 
@@ -125,95 +122,85 @@ const streamRef = useRef<MediaStream>(null)
           let detectionScore = faceWithBestDetection.detection.score;
 
           if (detectionScore < 0.8) {
-            setErrorAlertOpen(true)
-    
+            setErrorAlertOpen(true);
+
             setErrorMessage(
-              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition"
+              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition",
             );
-          } 
+          }
 
           // console.log(detections)
           console.log(detectionScore);
 
-        //   const ctx = canvasRef.current.getContext("2d");
-        //   ctx.clearRect(
-        //     0,
-        //     0,
-        //     canvasRef.current.width,
-        //     canvasRef.current.height
-        //   );
+          //   const ctx = canvasRef.current.getContext("2d");
+          //   ctx.clearRect(
+          //     0,
+          //     0,
+          //     canvasRef.current.width,
+          //     canvasRef.current.height
+          //   );
 
-        //   const resizedDetections = faceapi.resizeResults(detections, {
-        //     width: webcamEl.current.videoWidth,
-        //     height: webcamEl.current.videoHeight,
-        //   });
+          //   const resizedDetections = faceapi.resizeResults(detections, {
+          //     width: webcamEl.current.videoWidth,
+          //     height: webcamEl.current.videoHeight,
+          //   });
 
-        //   console.log(resizedDetections);
+          //   console.log(resizedDetections);
 
-        //   faceapi.draw.drawDetections(canvasRef.current, resizedDetections)
+          //   faceapi.draw.drawDetections(canvasRef.current, resizedDetections)
 
-        //   const options = {
-        //     label: "",
-        //     lineWidth: 4,
-        //     boxColor: "blue",
-        //   };
+          //   const options = {
+          //     label: "",
+          //     lineWidth: 4,
+          //     boxColor: "blue",
+          //   };
 
-        //   // console.log(faceWithBestDetection.detection.box)
+          //   // console.log(faceWithBestDetection.detection.box)
 
-        //   const drawBox = new faceapi.draw.DrawBox(
-        //     faceWithBestDetection.detection.box,
-        //     options
-        //   );
+          //   const drawBox = new faceapi.draw.DrawBox(
+          //     faceWithBestDetection.detection.box,
+          //     options
+          //   );
 
-        //   drawBox.draw(canvasRef.current);
-
+          //   drawBox.draw(canvasRef.current);
 
           const descriptorArrayResult = Array.from(
-            faceWithBestDetection.descriptor
+            faceWithBestDetection.descriptor,
           );
 
           console.log(descriptorArrayResult);
-          setDesArr(descriptorArrayResult)
+          setDesArr(descriptorArrayResult);
 
-       
-        //   postfaceData(descriptorArrayResult);
-
+          //   postfaceData(descriptorArrayResult);
         }
-
       } catch (err) {
         console.log(err);
       }
     };
 
-
-        setInterval(() => {
-          findDescriptors();
-        }, 3000);
-  
-  
-
-
+    setInterval(() => {
+      findDescriptors();
+    }, 3000);
   }, []);
 
   const stopStream = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop())
-      console.log("streaming stopped 1")
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      console.log("streaming stopped 1");
     }
 
     if (webcamEl.current) {
-      webcamEl.current.srcObject = null
-      console.log("streaming stopped 2")
+      webcamEl.current.srcObject = null;
+      console.log("streaming stopped 2");
     }
 
-    streamRef.current = null
-    console.log("streaming stopped 3")
-
-   
-  }
+    streamRef.current = null;
+    console.log("streaming stopped 3");
+  };
 
   const postfaceData = async () => {
-    console.log(desArr)
+    // console.log(desArr)
+    setIsLoading(true);
     try {
       const response = await fetch(`${serverAddress}/auth/loginface`, {
         method: "POST",
@@ -225,48 +212,40 @@ const streamRef = useRef<MediaStream>(null)
 
       const result = await response.json();
 
-   
       if (result.success) {
-        console.log(result)
-        stopStream()
-          setSuccessAlertOpen(true);
+        console.log(result);
+        stopStream();
+        setSuccessAlertOpen(true);
 
-       
-          
+        sessionStorage.setItem("token", result.loginToken);
+        sessionStorage.setItem("currentUserId", result.id);
+        sessionStorage.setItem("currentUserName", result.bestMatchFace);
 
-          sessionStorage.setItem("token", result.loginToken);
-          sessionStorage.setItem("currentUserId", result.id);
-          sessionStorage.setItem("currentUserName", result.bestMatchFace);
-          
-          setTimeout(() => {
-            
-            navigate("/dashboard", {
-                state: {
-                  username: result.bestMatchFace,
-                  id: result.id,
-                },
-                replace: true
-              });
-
-          }, 1500)
-        }  else {
-          setErrorAlertOpen(true)
-        setErrorMessage(`Error logging in: ${result.message}`)
-
-        }
-    
-   
+        setTimeout(() => {
+          navigate("/dashboard", {
+            state: {
+              username: result.bestMatchFace,
+              id: result.id,
+            },
+            replace: true,
+          });
+        }, 1500);
+      } else {
+        setErrorAlertOpen(true);
+        setErrorMessage(`Error logging in: ${result.message}`);
+      }
 
       console.log(result);
-
     } catch (err) {
       console.log(err);
-        setErrorAlertOpen(true)
-        setErrorMessage(`Error logging in: ${err}`)
+      setErrorAlertOpen(true);
+      setErrorMessage(`Error logging in: ${err}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handlePasswordSubmit = async (e: { preventDefault: () => void; }) => {
+  const handlePasswordSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     console.log({ manualUsername, password });
 
@@ -282,34 +261,31 @@ const streamRef = useRef<MediaStream>(null)
       const result = await response.json();
 
       if (result.success) {
-        stopStream()
+        stopStream();
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("currentUserId", result.userId);
         sessionStorage.setItem("currentUserName", result.userName);
         setSuccessAlertOpen(true);
 
-
         setTimeout(() => {
-            navigate("/dashboard", {
-                state: {
-                  username: result.bestMatchFace,
-                  id: result.id,
-                },
-                replace: true
-              });
-
-          }, 1500)
+          navigate("/dashboard", {
+            state: {
+              username: result.bestMatchFace,
+              id: result.id,
+            },
+            replace: true,
+          });
+        }, 1500);
       } else {
-        setErrorAlertOpen(true)
-      setErrorMessage(`Error logging in: ${result.message}`)
-
+        setErrorAlertOpen(true);
+        setErrorMessage(`Error logging in: ${result.message}`);
       }
 
       console.log(result);
     } catch (err) {
       console.log(err);
-      setErrorAlertOpen(true)
-      setErrorMessage(`Error logging in: ${err}`)
+      setErrorAlertOpen(true);
+      setErrorMessage(`Error logging in: ${err}`);
     }
   };
 
@@ -318,31 +294,33 @@ const streamRef = useRef<MediaStream>(null)
   return (
     <div className="px-8 comic-neue-regular">
       {/* <Navbar /> */}
-       <Snackbar
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              open={successAlertOpen}
-              autoHideDuration={3000}
-              onClose={() => setSuccessAlertOpen(false)}
-            >
-              <Alert variant="filled" severity="success" className="">
-                Logged in successfully!
-              </Alert>
-            </Snackbar>
-      
-            <Snackbar
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              open={errorAlertOpen}
-              autoHideDuration={4000}
-              onClose={() => setErrorAlertOpen(false)}
-            >
-                 <Alert variant="filled" severity="error">
-                  {errorMessage}
-      </Alert>
-            </Snackbar>
-            <h1 className={`text-3xl mt-5 ${isExpanded && "w-44"}` }>Log In to Your InnerNote Account</h1>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={successAlertOpen}
+        autoHideDuration={3000}
+        onClose={() => setSuccessAlertOpen(false)}
+      >
+        <Alert variant="filled" severity="success" className="">
+          Logged in successfully!
+        </Alert>
+      </Snackbar>
 
-            <div className="flex justify-center">
-            <div
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={errorAlertOpen}
+        autoHideDuration={4000}
+        onClose={() => setErrorAlertOpen(false)}
+      >
+        <Alert variant="filled" severity="error">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+      <h1 className={`text-3xl mt-5 ${isExpanded && "w-44"}`}>
+        Log In to Your InnerNote Account
+      </h1>
+
+      <div className="flex justify-center">
+        <div
           className="w-72 h-72 rounded-full my-auto flex justify-center  mt-10"
           style={{
             position: "relative",
@@ -370,76 +348,72 @@ const streamRef = useRef<MediaStream>(null)
             }}
           ></canvas>
         </div>
-            </div>
+      </div>
 
       <div className=" flex justify-center">
-       
-<div>
+        <div>
+          <h2 className="my-5 text-center pt-5 text-slate-600">
+            {" "}
+            Look in the web cam and hit Verify when the Button appears{" "}
+          </h2>
+          <div className=" flex justify-center ">
+            <div>
+              <div>
+                {" "}
+                {isLoading ? (
+                  <img src={loaderGif} className="w-12 h-12 mx-auto" />
+                ) : (
+                  <></>
+                )}
+                <img
+                  src={loaderGif}
+                  className={`${loginBtn ? "hidden" : "block"} w-12 h-12 mx-auto`}
+                />{" "}
+              </div>
 
-
-        
-
-
-   
-     <h2 className="my-5 text-center pt-5 text-slate-600"> Look in the web cam and hit Verify when it appears </h2>
-     <div className=" flex justify-center ">
-
-      <div>
-      <div  > <img src={loaderGif}  className={`${loginBtn ? 'hidden' : 'block'} w-12 h-12 mx-auto`} /> </div>
-
-<Button
-              sx={{textTransform: "capitalize"}}
-              variant="contained"
-              onClick={postfaceData}
-              style={{ display: loginBtn ? "block" : "none" }}
-            >
-              {" "}
-              
-              Verify{" "}
-            </Button>
+              <Button
+                sx={{ textTransform: "capitalize" }}
+                variant="contained"
+                onClick={postfaceData}
+                style={{ display: loginBtn ? "block" : "none" }}
+              >
+                {" "}
+                Verify{" "}
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
-    
-     </div>
+      <div className="flex justify-center mt-16">
+        <div>
+          <Button
+            style={{ textTransform: "capitalize" }}
+            variant="text"
+            color="info"
+            sx={{ marginX: "1rem" }}
+            onClick={() => {
+              setIsExpanded((prev) => !prev);
+            }}
+          >
+            {" "}
+            Log In using password{" "}
+          </Button>
 
-      
-</div>
-
-
-
+          <Button
+            variant="text"
+            style={{ textTransform: "capitalize" }}
+            color="secondary"
+            sx={{ marginX: "1rem", textTransform: "" }}
+            onClick={() => {
+              navigate("/signin");
+            }}
+          >
+            {" "}
+            Don't have an account? Sign in
+          </Button>
+        </div>
       </div>
-
-
-    <div className="flex justify-center mt-16">
-   <div>
-   <Button
-     style={{textTransform: "capitalize"}}
-          variant="text"
-          color="info"
-          sx={{ marginX: "1rem" }}
-          onClick={() => {
-            setIsExpanded((prev) => !prev);
-          }}
-        >
-          {" "}
-          Log In using password{" "}
-        </Button>
-
-
-                      <Button
-                        variant="text"
-                        style={{textTransform: "capitalize"}}
-                        color="secondary"
-                        sx={{ marginX: "1rem", textTransform: "" }}
-                        onClick={() => {
-                         navigate("/signin")
-                        }}
-                      >
-                        {" "}
-                       Don't have an account? Sign in
-                      </Button>
-   </div>
-    </div>
 
       <motion.div
         className="shadow-2xl rounded-md h-[800px] absolute right-0 top-0 bg-white comic-neue-regular"
@@ -448,13 +422,9 @@ const streamRef = useRef<MediaStream>(null)
         animate={isExpanded ? "broad" : "thin"}
         transition={{ type: "tween", duration: 0.4, stiffness: 100 }}
       >
-          <div className="p-5 mt-5 w-full flex justify-between">
+        <div className="p-5 mt-5 w-full flex justify-between">
           <Typography variant="h5" component="h5">
-            <div className="comic-neue-regular">
-            Log In with Password
-
-
-            </div>
+            <div className="comic-neue-regular">Log In with Password</div>
           </Typography>
 
           <Button onClick={() => setIsExpanded(false)}>
@@ -488,8 +458,7 @@ const streamRef = useRef<MediaStream>(null)
 
             <div className="mt-10">
               <Button
-                   style={{textTransform: "capitalize"}}
-
+                style={{ textTransform: "capitalize" }}
                 variant="contained"
                 color="secondary"
                 onClick={handlePasswordSubmit}

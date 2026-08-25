@@ -20,8 +20,7 @@ import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
-import loaderGif from './assets/pink-loader.gif'
-
+import loaderGif from "./assets/pink-loader.gif";
 
 const NewSignIn = () => {
   const serverAddress = import.meta.env.VITE_SERVER_ADDRESS;
@@ -42,25 +41,23 @@ const NewSignIn = () => {
 
   const [successAlertOpen, setSuccessAlertOpen] = useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const streamRef = useRef<MediaStream>(null)
+  const streamRef = useRef<MediaStream>(null);
 
   const stopStream = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop())
+      streamRef.current.getTracks().forEach((track) => track.stop());
     }
 
     if (webcamEl.current) {
-      webcamEl.current.srcObject = null
-  }
+      webcamEl.current.srcObject = null;
+    }
 
-  streamRef.current = null
-
-}
-
-
+    streamRef.current = null;
+  };
 
   useEffect(() => {
     const startWebCam = async () => {
@@ -92,17 +89,17 @@ const NewSignIn = () => {
           if (detections.length > 1) {
             setErrorAlertOpen(true);
             setErrorMessage(
-              "Multiple faces detected. Please focus only one face in the view"
+              "Multiple faces detected. Please focus only one face in the view",
             );
             setSignInBtn(false);
           } else if (detections.length === 0) {
             setErrorAlertOpen(true);
 
             setErrorMessage(
-              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition"
+              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition",
             );
             setSignInBtn(false);
-            return
+            return;
           } else {
             if (detections.length === 1) {
               setErrorAlertOpen(false);
@@ -123,7 +120,7 @@ const NewSignIn = () => {
 
           if (detectionScore < 0.8) {
             setErrorMessage(
-              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition"
+              "No face detected. Please remove caps, masks, sunglassses that can hinder with face recognition",
             );
 
             setErrorAlertOpen(true);
@@ -140,25 +137,18 @@ const NewSignIn = () => {
           setFormData(descriptorArrayResult);
         }
       } catch (err) {
-       
-          setErrorAlertOpen(true)
-        setErrorMessage(`Error reading face: ${err}`)
-
-       
-        
+        setErrorAlertOpen(true);
+        setErrorMessage(`Error reading face: ${err}`);
       }
     };
 
-      setInterval(() => {
-        findDescriptors();
-      }, 3000);
-  
-
-  
+    setInterval(() => {
+      findDescriptors();
+    }, 3000);
   }, []);
 
-
   const postfaceDataForSignIn = async () => {
+    setIsLoading(true);
     console.log(username);
     try {
       const response = await fetch(`${serverAddress}/auth/registerface`, {
@@ -169,29 +159,30 @@ const NewSignIn = () => {
         body: JSON.stringify({ empName: username, descriptorArray: formdata }),
       });
 
-      const result: {success: boolean, message: string} = await response.json();
-      console.log(result)
+      const result: { success: boolean; message: string } =
+        await response.json();
+      console.log(result);
 
       if (result.success) {
-        stopStream()
+        stopStream();
         setSuccessAlertOpen(true);
-       setTimeout(() => {
-        navigate("/login", {
-          replace: true
-        })
-       }, 2500)
-      }  else {
+        setTimeout(() => {
+          navigate("/login", {
+            replace: true,
+          });
+        }, 2500);
+      } else {
         setErrorAlertOpen(true);
         setErrorMessage(`Error signing in: ${result.message}`);
-
       }
     } catch (err) {
       console.log(err);
       setErrorAlertOpen(true);
       setErrorMessage(`Error signing in: ${err}`);
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   const handleSubmit = () => {
     console.log(formdata);
@@ -199,7 +190,7 @@ const NewSignIn = () => {
     postfaceDataForSignIn();
   };
 
-  const handlePasswordSubmit = async (e: { preventDefault: () => void; }) => {
+  const handlePasswordSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     console.log({ manualUsername, password });
 
@@ -214,19 +205,17 @@ const NewSignIn = () => {
 
       const result = await response.json();
       if (result.success) {
-        stopStream()
+        stopStream();
         setSuccessAlertOpen(true);
         setTimeout(() => {
           navigate("/login", {
-            replace: true
+            replace: true,
           });
         }, 2000);
       } else {
-        setErrorAlertOpen(true)
-      setErrorMessage(`Error signing in: ${result.message}`)
-
+        setErrorAlertOpen(true);
+        setErrorMessage(`Error signing in: ${result.message}`);
       }
-    
 
       console.log(result);
     } catch (err) {
@@ -265,28 +254,30 @@ const NewSignIn = () => {
       {/* <Navbar /> */}
 
       <div>
-        <h1 className={`text-3xl mt-6 ${isExpanded && "w-44"}` }>Create Your InnerNote Account</h1>
+        <h1 className={`text-3xl mt-6 ${isExpanded && "w-44"}`}>
+          Create Your InnerNote Account
+        </h1>
 
         <div className="w-full flex justify-center">
-        <div className="w-72 h-72 rounded-full my-auto">
-                <video
-                  autoPlay
-                  width={2000}
-                  height={2000}
-                  ref={webcamEl}
-                  className="w-72 h-72 rounded-full object-cover"
-                ></video>
-              </div>
+          <div className="w-72 h-72 rounded-full my-auto">
+            <video
+              autoPlay
+              width={2000}
+              height={2000}
+              ref={webcamEl}
+              className="w-72 h-72 rounded-full object-cover"
+            ></video>
+          </div>
         </div>
 
         <div className="flex justify-center">
-
-            <div>
+          <div>
             <div>
               {" "}
               <h2 className="mb-5 mt-8 text-center text-slate-600">
                 {" "}
-                Look in the web cam, type a username and hit Register Face when it appears{" "}
+                Look in the web cam, type a username and hit Register Face when
+                the Button appears{" "}
               </h2>
             </div>
 
@@ -301,11 +292,22 @@ const NewSignIn = () => {
                 />
               </FormControl>
 
-              <div  > <img src={loaderGif}  className={`${signInBtn ? 'hidden' : 'block'} w-12 h-12 mx-auto`} /> </div>
+              <div>
+                {" "}
+                {isLoading ? (
+                  <img src={loaderGif} className="w-12 h-12 mx-auto" />
+                ) : (
+                  <></>
+                )}
+                <img
+                  src={loaderGif}
+                  className={`${signInBtn ? "hidden" : "block"} w-12 h-12 mx-auto`}
+                />{" "}
+              </div>
 
               <Button
                 variant="contained"
-                sx={{textTransform: "capitalize"}}
+                sx={{ textTransform: "capitalize" }}
                 onClick={handleSubmit}
                 style={{ display: signInBtn ? "block" : "none" }}
               >
@@ -317,7 +319,7 @@ const NewSignIn = () => {
             <div className="mt-16">
               <Button
                 variant="text"
-                style={{textTransform: "capitalize"}}
+                style={{ textTransform: "capitalize" }}
                 color="info"
                 sx={{ marginX: "1rem", textTransform: "" }}
                 onClick={() => {
@@ -330,22 +332,19 @@ const NewSignIn = () => {
 
               <Button
                 variant="text"
-                style={{textTransform: "capitalize"}}
+                style={{ textTransform: "capitalize" }}
                 color="secondary"
                 sx={{ marginX: "1rem", textTransform: "" }}
                 onClick={() => {
-                 navigate("/login")
+                  navigate("/login");
                 }}
               >
                 {" "}
-               Already have an account? Log in
+                Already have an account? Log in
               </Button>
             </div>
-            </div>
-           
-
-          
           </div>
+        </div>
       </div>
 
       <motion.div
@@ -357,11 +356,7 @@ const NewSignIn = () => {
       >
         <div className="p-5 mt-5 w-full flex justify-between">
           <Typography variant="h5" component="h5">
-          <div className="comic-neue-regular">
-            Sign In with Password
-
-
-            </div>
+            <div className="comic-neue-regular">Sign In with Password</div>
           </Typography>
 
           <Button onClick={() => setIsExpanded(false)}>
@@ -395,7 +390,7 @@ const NewSignIn = () => {
 
             <div className="mt-10">
               <Button
-               style={{textTransform: "capitalize"}}
+                style={{ textTransform: "capitalize" }}
                 variant="contained"
                 color="secondary"
                 onClick={handlePasswordSubmit}
